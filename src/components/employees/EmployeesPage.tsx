@@ -1,7 +1,17 @@
 import { Plus } from 'lucide-react'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
+import { EmployeeTable } from './EmployeeTable'
+import { useEmployees } from '@/hooks/useEmployees'
+import type { Employee } from '@/types'
 
 export function EmployeesPage() {
+  const { employees, loading } = useEmployees({ pageSize: 5 })
+
+  function handleViewEmployee(employee: Employee) {
+    // Detail panel will be wired in Step 8
+    console.log('View employee:', employee.id)
+  }
+
   return (
     <div className="flex-1 px-8 py-6">
       {/* Breadcrumb + New button row */}
@@ -19,7 +29,7 @@ export function EmployeesPage() {
         Easily assign employees to teams, include them for tracking in team productivity status, and manage their connected accounts.
       </p>
 
-      {/* Search bar placeholder — will be built in Step 5 */}
+      {/* Search bar placeholder — Step 5 */}
       <div className="mb-4">
         <div className="flex items-center gap-2 rounded-md border border-border px-3 py-2.5">
           <svg className="h-4 w-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -29,7 +39,7 @@ export function EmployeesPage() {
         </div>
       </div>
 
-      {/* Filter bar placeholder — will be built in Step 6 */}
+      {/* Filter bar placeholder — Step 6 */}
       <div className="mb-4">
         <button className="flex items-center gap-1 text-sm font-medium text-teal-600 hover:text-teal-700">
           <Plus className="h-4 w-4" />
@@ -37,12 +47,12 @@ export function EmployeesPage() {
         </button>
       </div>
 
-      {/* Table placeholder — will be built in Step 4 */}
-      <div className="rounded-md border border-border">
-        <div className="p-8 text-center text-sm text-muted-foreground">
-          Employee table will render here
-        </div>
-      </div>
+      {/* Employee table */}
+      <EmployeeTable
+        employees={employees}
+        loading={loading}
+        onViewEmployee={handleViewEmployee}
+      />
     </div>
   )
 }
