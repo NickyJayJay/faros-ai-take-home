@@ -1,11 +1,20 @@
+import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
 import { EmployeeTable } from './EmployeeTable'
+import { EmployeeSearch } from './EmployeeSearch'
 import { useEmployees } from '@/hooks/useEmployees'
+import { useDebounce } from '@/hooks/useDebounce'
 import type { Employee } from '@/types'
 
 export function EmployeesPage() {
-  const { employees, loading } = useEmployees({ pageSize: 5 })
+  const [searchInput, setSearchInput] = useState('')
+  const debouncedSearch = useDebounce(searchInput, 300)
+
+  const { employees, loading } = useEmployees({
+    pageSize: 5,
+    search: debouncedSearch || undefined,
+  })
 
   function handleViewEmployee(employee: Employee) {
     // Detail panel will be wired in Step 8
@@ -29,14 +38,9 @@ export function EmployeesPage() {
         Easily assign employees to teams, include them for tracking in team productivity status, and manage their connected accounts.
       </p>
 
-      {/* Search bar placeholder — Step 5 */}
+      {/* Search bar */}
       <div className="mb-4">
-        <div className="flex items-center gap-2 rounded-md border border-border px-3 py-2.5">
-          <svg className="h-4 w-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <span className="text-sm text-muted-foreground">Search employees by name ...</span>
-        </div>
+        <EmployeeSearch value={searchInput} onChange={setSearchInput} />
       </div>
 
       {/* Filter bar placeholder — Step 6 */}
