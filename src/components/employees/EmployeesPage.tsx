@@ -5,6 +5,7 @@ import { EmployeeTable } from './EmployeeTable'
 import { EmployeeSearch } from './EmployeeSearch'
 import { FilterBar } from './FilterBar'
 import { Pagination } from './Pagination'
+import { EmployeeDetailPanel } from './EmployeeDetailPanel'
 import { useEmployees } from '@/hooks/useEmployees'
 import { useDebounce } from '@/hooks/useDebounce'
 import type { Employee, EmployeeFilter } from '@/types'
@@ -17,6 +18,7 @@ export function EmployeesPage() {
   // Stack of previous endCursors for backward navigation
   const cursorStack = useRef<string[]>([])
   const [currentPage, setCurrentPage] = useState(0)
+  const [selectedEmployeeId, setSelectedEmployeeId] = useState<string | null>(null)
 
   const debouncedSearch = useDebounce(searchInput, 300)
 
@@ -79,8 +81,7 @@ export function EmployeesPage() {
   }
 
   function handleViewEmployee(employee: Employee) {
-    // Detail panel will be wired in Step 8
-    console.log('View employee:', employee.id)
+    setSelectedEmployeeId(employee.id)
   }
 
   const currentStart = totalCount > 0 ? currentPage * pageSize + 1 : 0
@@ -130,6 +131,13 @@ export function EmployeesPage() {
           onNextPage={handleNextPage}
           onPreviousPage={handlePreviousPage}
           onPageSizeChange={handlePageSizeChange}
+        />
+      )}
+      {/* Employee detail panel */}
+      {selectedEmployeeId && (
+        <EmployeeDetailPanel
+          employeeId={selectedEmployeeId}
+          onClose={() => setSelectedEmployeeId(null)}
         />
       )}
     </div>
