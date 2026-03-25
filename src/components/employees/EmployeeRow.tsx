@@ -1,3 +1,6 @@
+import { TableRow, TableCell } from '@/components/ui/table'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
 import type { Employee } from '@/types'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TeamChip } from '@/components/common/TeamChip'
@@ -10,18 +13,14 @@ interface EmployeeRowProps {
 
 export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
   return (
-    <tr className="border-b border-border last:border-b-0 hover:bg-muted/30">
+    <TableRow>
       {/* Checkbox */}
-      <td className="w-12 px-4 py-3">
-        <input
-          type="checkbox"
-          className="h-4 w-4 rounded border-border text-primary"
-          aria-label={`Select ${employee.name}`}
-        />
-      </td>
+      <TableCell className="w-12">
+        <Checkbox aria-label={`Select ${employee.name}`} />
+      </TableCell>
 
       {/* Name + Avatar + Email */}
-      <td className="px-4 py-3">
+      <TableCell>
         <div className="flex items-center gap-3">
           <img
             src={employee.photoUrl ?? ''}
@@ -37,43 +36,40 @@ export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
             )}
           </div>
         </div>
-      </td>
+      </TableCell>
 
       {/* Tracking Status */}
-      <td className="px-4 py-3">
+      <TableCell>
         <StatusBadge
           trackingStatus={employee.trackingStatus}
           trackingCategory={employee.trackingCategory}
         />
-      </td>
+      </TableCell>
 
       {/* Teams */}
-      <td className="px-4 py-3">
+      <TableCell>
         <div className="flex flex-wrap gap-1.5">
           {employee.teams.map((team) => (
             <TeamChip key={team.id} name={team.name} uid={team.uid} />
           ))}
         </div>
-      </td>
+      </TableCell>
 
       {/* Accounts Connected */}
-      <td className="px-4 py-3">
+      <TableCell>
         <div className="flex items-center gap-2">
           {employee.accounts.map((account) => (
             <AccountIcon key={`${account.type}-${account.uid}`} type={account.type} source={account.source} />
           ))}
         </div>
-      </td>
+      </TableCell>
 
       {/* View */}
-      <td className="px-4 py-3">
-        <button
-          onClick={() => onView(employee)}
-          className="rounded-md border border-border px-3 py-1 text-sm font-medium text-foreground hover:bg-muted"
-        >
+      <TableCell>
+        <Button variant="outline" size="sm" onClick={() => onView(employee)}>
           View
-        </button>
-      </td>
-    </tr>
+        </Button>
+      </TableCell>
+    </TableRow>
   )
 }

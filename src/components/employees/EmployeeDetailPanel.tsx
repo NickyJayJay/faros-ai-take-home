@@ -1,9 +1,14 @@
 import { useQuery } from '@apollo/client/react'
-import { X, ExternalLink, ChevronDown, ChevronRight, Plus } from 'lucide-react'
-import { useState } from 'react'
+import { X, ExternalLink, ChevronDown, Plus } from 'lucide-react'
 import { GET_EMPLOYEE } from '@/graphql/queries'
 import type { GetEmployeeData, GetEmployeeVars } from '@/types'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
 
 interface EmployeeDetailPanelProps {
   employeeId: string
@@ -34,12 +39,9 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
         {error && (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6">
             <p className="text-sm text-destructive">Failed to load employee details.</p>
-            <button
-              onClick={onClose}
-              className="text-sm text-primary hover:underline"
-            >
+            <Button variant="link" onClick={onClose}>
               Close
-            </button>
+            </Button>
           </div>
         )}
 
@@ -52,19 +54,21 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
                   {employee.name ?? employee.uid}
                 </h2>
                 <div className="flex items-center gap-2">
-                  <button
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
                     aria-label="Open external"
                   >
                     <ExternalLink className="h-4 w-4" />
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
                     onClick={onClose}
-                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
                     aria-label="Close panel"
                   >
                     <X className="h-4 w-4" />
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -86,15 +90,10 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
 
             {/* Footer */}
             <div className="border-t border-border px-6 py-3 flex items-center gap-2">
-              <button className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-                Save
-              </button>
-              <button
-                onClick={onClose}
-                className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
-              >
+              <Button size="sm">Save</Button>
+              <Button size="sm" variant="outline" onClick={onClose}>
                 Cancel
-              </button>
+              </Button>
             </div>
           </>
         )}
@@ -140,23 +139,14 @@ function ProfileInfoSection({
 }: {
   employee: NonNullable<GetEmployeeData['employee']>
 }) {
-  const [open, setOpen] = useState(true)
-
   return (
-    <div>
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex w-full items-center gap-1.5 py-2 text-sm font-semibold text-foreground"
-      >
-        {open ? (
-          <ChevronDown className="h-4 w-4" />
-        ) : (
-          <ChevronRight className="h-4 w-4" />
-        )}
+    <Collapsible defaultOpen>
+      <CollapsibleTrigger className="flex w-full items-center gap-1.5 py-2 text-sm font-semibold text-foreground [&[data-open]>svg]:rotate-90">
+        <ChevronDown className="h-4 w-4 -rotate-90 transition-transform" />
         Profile Info
-      </button>
+      </CollapsibleTrigger>
 
-      {open && (
+      <CollapsibleContent>
         <div className="flex flex-col gap-4 pb-4">
           <ReadOnlyField label="UID" value={employee.uid} />
           <PlaceholderField label="Title" />
@@ -167,8 +157,8 @@ function ProfileInfoSection({
           <PlaceholderField label="Level" />
           <PlaceholderField label="Employment Type" />
         </div>
-      )}
-    </div>
+      </CollapsibleContent>
+    </Collapsible>
   )
 }
 

@@ -1,10 +1,12 @@
 import { useState, useMemo } from 'react'
 import { Search } from 'lucide-react'
-import { Popover } from '@/components/common/Popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 interface FilterValuePopoverProps {
-  open: boolean
-  onClose: () => void
+  triggerContent: React.ReactNode
   options: { value: string; label: string }[]
   selectedValues: string[]
   onApply: (values: string[]) => void
@@ -12,15 +14,23 @@ interface FilterValuePopoverProps {
 }
 
 export function FilterValuePopover({
-  open,
-  onClose,
+  triggerContent,
   options,
   selectedValues,
   onApply,
   searchPlaceholder = 'Search...',
 }: FilterValuePopoverProps) {
+  const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<Set<string>>(new Set(selectedValues))
+
+  function handleOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      setSelected(new Set(selectedValues))
+      setSearch('')
+    }
+    setOpen(nextOpen)
+  }
 
   const filteredOptions = useMemo(() => {
     if (!search.trim()) return options
@@ -28,7 +38,8 @@ export function FilterValuePopover({
     return options.filter((o) => o.label.toLowerCase().includes(term))
   }, [options, search])
 
-  const allFilteredSelected = filteredOptions.length > 0 && filteredOptions.every((o) => selected.has(o.value))
+  const allFilteredSelected =
+    filteredOptions.length > 0 && filteredOptions.every((o) => selected.has(o.value))
 
   function toggleValue(value: string) {
     setSelected((prev) => {
@@ -57,27 +68,21 @@ export function FilterValuePopover({
 
   function handleApply() {
     onApply([...selected])
-    onClose()
-  }
-
-  function handleCancel() {
-    setSelected(new Set(selectedValues))
-    setSearch('')
-    onClose()
+    setOpen(false)
   }
 
   return (
-    <Popover open={open} onClose={handleCancel}>
-      <div className="p-3">
+    <Popover open={open} onOpenChange={handleOpenChange}>
+      <PopoverTrigger render={triggerContent as React.ReactElement} />
+      <PopoverContent align="start" className="w-64">
         {/* Search input */}
-        <div className="mb-2 flex items-center gap-2 rounded-md border border-border px-2 py-1.5">
-          <Search className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-          <input
-            type="text"
+        <div className="relative mb-2">
+          <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={searchPlaceholder}
-            className="w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+            className="pl-7 h-7 text-sm"
           />
         </div>
 
@@ -90,14 +95,12 @@ export function FilterValuePopover({
         </button>
 
         {/* Checkbox list */}
-        <div className="flex max-h-48 flex-col gap-1.5 overflow-y-auto">
+        <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
           {filteredOptions.map(({ value, label }) => (
             <label key={value} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selected.has(value)}
-                onChange={() => toggleValue(value)}
-                className="h-4 w-4 rounded border-border text-teal-600 focus:ring-teal-500"
+                onCheckedChange={() => toggleValue(value)}
               />
               <span className="text-sm text-foreground">{label}</span>
             </label>
@@ -109,20 +112,10 @@ export function FilterValuePopover({
 
         {/* Actions */}
         <div className="mt-3 flex items-center gap-2">
-          <button
-            onClick={handleApply}
-            className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Apply
-          </button>
-          <button
-            onClick={handleCancel}
-            className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
-          >
-            Cancel
-          </button>
+          <Button size="sm" onClick={handleApply}>Apply</Button>
+          <Button size="sm" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
         </div>
-      </div>
+      </PopoverContent>
     </Popover>
   )
 }

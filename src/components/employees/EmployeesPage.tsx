@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { Breadcrumb } from '@/components/layout/Breadcrumb'
 import { EmployeeTable } from './EmployeeTable'
 import { EmployeeSearch } from './EmployeeSearch'
@@ -91,10 +92,10 @@ export function EmployeesPage() {
       {/* Breadcrumb + New button row */}
       <div className="flex items-center justify-between mb-6">
         <Breadcrumb />
-        <button className="flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+        <Button size="sm">
           <Plus className="h-4 w-4" />
           New
-        </button>
+        </Button>
       </div>
 
       {/* Page title */}

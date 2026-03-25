@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Popover } from '@/components/common/Popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
 
 export type FilterCategory = 'accountTypes' | 'teams' | 'trackingStatuses'
 
 interface FilterCategoryPopoverProps {
-  open: boolean
-  onClose: () => void
   activeCategories: FilterCategory[]
   onApply: (categories: FilterCategory[]) => void
 }
@@ -17,14 +18,20 @@ const CATEGORIES: { key: FilterCategory; label: string }[] = [
 ]
 
 export function FilterCategoryPopover({
-  open,
-  onClose,
   activeCategories,
   onApply,
 }: FilterCategoryPopoverProps) {
+  const [open, setOpen] = useState(false)
   const [selected, setSelected] = useState<Set<FilterCategory>>(
     new Set(activeCategories)
   )
+
+  function handleOpenChange(nextOpen: boolean) {
+    if (nextOpen) {
+      setSelected(new Set(activeCategories))
+    }
+    setOpen(nextOpen)
+  }
 
   function toggleCategory(key: FilterCategory) {
     setSelected((prev) => {
@@ -37,48 +44,37 @@ export function FilterCategoryPopover({
 
   function handleApply() {
     onApply([...selected])
-    onClose()
-  }
-
-  function handleCancel() {
-    setSelected(new Set(activeCategories))
-    onClose()
+    setOpen(false)
   }
 
   return (
-    <Popover open={open} onClose={handleCancel}>
-      <div className="p-3">
+    <Popover open={open} onOpenChange={handleOpenChange}>
+      <PopoverTrigger
+        className="flex items-center gap-1 text-sm font-medium text-teal-600 hover:text-teal-700 cursor-pointer"
+      >
+        <Plus className="h-4 w-4" />
+        Add Filter
+      </PopoverTrigger>
+      <PopoverContent align="start" className="w-56">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Filter by
         </p>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2.5">
           {CATEGORIES.map(({ key, label }) => (
             <label key={key} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
+              <Checkbox
                 checked={selected.has(key)}
-                onChange={() => toggleCategory(key)}
-                className="h-4 w-4 rounded border-border text-teal-600 focus:ring-teal-500"
+                onCheckedChange={() => toggleCategory(key)}
               />
               <span className="text-sm text-foreground">{label}</span>
             </label>
           ))}
         </div>
         <div className="mt-3 flex items-center gap-2">
-          <button
-            onClick={handleApply}
-            className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Apply
-          </button>
-          <button
-            onClick={handleCancel}
-            className="rounded-md border border-border px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted"
-          >
-            Cancel
-          </button>
+          <Button size="sm" onClick={handleApply}>Apply</Button>
+          <Button size="sm" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
         </div>
-      </div>
+      </PopoverContent>
     </Popover>
   )
 }

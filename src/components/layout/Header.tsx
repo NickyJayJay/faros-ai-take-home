@@ -1,4 +1,5 @@
 import { ChevronDown, Home, RefreshCw, Heart } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import farosLogo from '@/assets/faros-logo.svg'
 
 export function Header() {
@@ -9,16 +10,16 @@ export function Header() {
         <div className="flex items-center gap-2">
           <img src={farosLogo} alt="Faros AI" className="h-6 w-6" />
         </div>
-        <button className="flex items-center gap-1.5 text-sm font-medium text-foreground">
+        <Button variant="ghost" size="sm">
           Default Workspace
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
-        </button>
-        <nav className="flex items-center gap-4">
-          <button className="flex items-center gap-1 text-sm font-medium text-foreground">
+        </Button>
+        <nav className="flex items-center gap-1">
+          <Button variant="ghost" size="sm">
             Modules
             <ChevronDown className="h-4 w-4 text-muted-foreground" />
-          </button>
-          <span className="text-sm font-medium text-foreground">Scorecard</span>
+          </Button>
+          <Button variant="ghost" size="sm">Scorecard</Button>
         </nav>
       </div>
 
@@ -27,26 +28,18 @@ export function Header() {
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">Personal:</span>
           <div className="flex items-center gap-1">
-            <IconButton><Home className="h-4 w-4" /></IconButton>
-            <IconButton><RefreshCw className="h-4 w-4" /></IconButton>
+            <Button variant="outline" size="icon-sm"><Home className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon-sm"><RefreshCw className="h-4 w-4" /></Button>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">Acme:</span>
           <div className="flex items-center gap-1">
-            <IconButton><Home className="h-4 w-4" /></IconButton>
-            <IconButton><Heart className="h-4 w-4" /></IconButton>
+            <Button variant="outline" size="icon-sm"><Home className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon-sm"><Heart className="h-4 w-4" /></Button>
           </div>
         </div>
       </div>
     </header>
-  )
-}
-
-function IconButton({ children }: { children: React.ReactNode }) {
-  return (
-    <button className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground hover:bg-muted">
-      {children}
-    </button>
   )
 }
