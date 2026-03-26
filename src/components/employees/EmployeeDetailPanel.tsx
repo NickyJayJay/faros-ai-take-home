@@ -10,6 +10,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 import { AIInsightsSection } from '@/components/ai/AIInsightsSection'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 
 interface EmployeeDetailPanelProps {
   employeeId: string
@@ -87,7 +88,9 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
               <ProfileInfoSection employee={employee} />
 
               {/* AI Insights */}
-              <AIInsightsSection employeeId={employeeId} />
+              <ErrorBoundary label="AI Insights" inline>
+                <AIInsightsSection employeeId={employeeId} />
+              </ErrorBoundary>
             </div>
 
             {/* Footer */}

@@ -8,6 +8,7 @@ import { FilterBar } from './FilterBar'
 import { Pagination } from './Pagination'
 import { EmployeeDetailPanel } from './EmployeeDetailPanel'
 import { useEmployees } from '@/hooks/useEmployees'
+import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useTelemetry } from '@/hooks/useTelemetry'
 import type { Employee, EmployeeFilter } from '@/types'
@@ -136,11 +137,13 @@ export function EmployeesPage() {
       </div>
 
       {/* Employee table */}
-      <EmployeeTable
-        employees={employees}
-        loading={loading}
-        onViewEmployee={handleViewEmployee}
-      />
+      <ErrorBoundary label="Employee table" inline>
+        <EmployeeTable
+          employees={employees}
+          loading={loading}
+          onViewEmployee={handleViewEmployee}
+        />
+      </ErrorBoundary>
 
       {/* Pagination */}
       {totalCount > 0 && (
