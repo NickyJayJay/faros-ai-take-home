@@ -8,6 +8,7 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 import { useConsent } from '@/contexts/ConsentContext'
+import { useFeatureFlag } from '@/hooks/useFeatureFlag'
 import { useAIInsights, type InsightError } from '@/hooks/useAIInsights'
 import { ConsentPrompt } from './ConsentPrompt'
 import { InsightCard } from './InsightCard'
@@ -17,8 +18,11 @@ interface AIInsightsSectionProps {
 }
 
 export function AIInsightsSection({ employeeId }: AIInsightsSectionProps) {
+  const aiEnabled = useFeatureFlag('AI_INSIGHTS_ENABLED')
   const { consented } = useConsent()
   const { insight, piiResult, loading, error, retry } = useAIInsights(employeeId)
+
+  if (!aiEnabled) return null
 
   return (
     <Collapsible defaultOpen>
