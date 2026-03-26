@@ -6,9 +6,9 @@
  */
 
 export interface FeatureFlagDefinition {
-  key: string
-  description: string
-  defaultValue: boolean
+  key: string;
+  description: string;
+  defaultValue: boolean;
 }
 
 export const FLAG_DEFINITIONS: FeatureFlagDefinition[] = [
@@ -17,26 +17,26 @@ export const FLAG_DEFINITIONS: FeatureFlagDefinition[] = [
     description: 'Show AI-generated employee insights in the detail panel',
     defaultValue: true,
   },
-]
+];
 
-const STORAGE_PREFIX = 'ff_'
+const STORAGE_PREFIX = 'ff_';
 
 export function readFlag(key: string): boolean {
-  const def = FLAG_DEFINITIONS.find((f) => f.key === key)
-  const defaultValue = def?.defaultValue ?? false
+  const def = FLAG_DEFINITIONS.find((f) => f.key === key);
+  const defaultValue = def?.defaultValue ?? false;
 
   try {
-    const stored = localStorage.getItem(`${STORAGE_PREFIX}${key}`)
-    if (stored === null) return defaultValue
-    return stored === 'true'
+    const stored = localStorage.getItem(`${STORAGE_PREFIX}${key}`);
+    if (stored === null) return defaultValue;
+    return stored === 'true';
   } catch {
-    return defaultValue
+    return defaultValue;
   }
 }
 
 export function writeFlag(key: string, value: boolean): void {
   try {
-    localStorage.setItem(`${STORAGE_PREFIX}${key}`, String(value))
+    localStorage.setItem(`${STORAGE_PREFIX}${key}`, String(value));
   } catch {
     // localStorage may be unavailable (private browsing, quota exceeded)
   }
