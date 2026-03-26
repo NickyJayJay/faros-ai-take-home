@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { TableRow, TableCell } from '@/components/ui/table'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
@@ -5,6 +6,7 @@ import type { Employee } from '@/types'
 import { StatusBadge } from '@/components/common/StatusBadge'
 import { TeamChip } from '@/components/common/TeamChip'
 import { AccountIcon } from '@/components/common/AccountIcon'
+import { User } from 'lucide-react'
 
 interface EmployeeRowProps {
   employee: Employee
@@ -12,6 +14,9 @@ interface EmployeeRowProps {
 }
 
 export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
+  const [imgError, setImgError] = useState(false)
+  const showFallback = !employee.photoUrl || imgError
+
   return (
     <TableRow>
       {/* Checkbox */}
@@ -22,11 +27,18 @@ export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
       {/* Name + Avatar + Email */}
       <TableCell>
         <div className="flex items-center gap-3">
-          <img
-            src={employee.photoUrl ?? ''}
-            alt=""
-            className="h-10 w-10 rounded-full bg-muted object-cover"
-          />
+          {showFallback ? (
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
+              <User className="h-5 w-5 text-muted-foreground" />
+            </div>
+          ) : (
+            <img
+              src={employee.photoUrl!}
+              alt=""
+              className="h-10 w-10 rounded-full bg-muted object-cover"
+              onError={() => setImgError(true)}
+            />
+          )}
           <div className="flex flex-col">
             <span className="text-sm font-medium text-blue-600">
               {employee.name ?? employee.uid}
