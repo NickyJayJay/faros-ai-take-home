@@ -9,9 +9,11 @@ import { Pagination } from './Pagination'
 import { EmployeeDetailPanel } from './EmployeeDetailPanel'
 import { useEmployees } from '@/hooks/useEmployees'
 import { useDebounce } from '@/hooks/useDebounce'
+import { useTelemetry } from '@/hooks/useTelemetry'
 import type { Employee, EmployeeFilter } from '@/types'
 
 export function EmployeesPage() {
+  const { track } = useTelemetry()
   const [searchInput, setSearchInput] = useState('')
   const [filter, setFilter] = useState<EmployeeFilter>({})
   const [pageSize, setPageSize] = useState(5)
@@ -30,6 +32,11 @@ export function EmployeesPage() {
     filter,
   })
 
+  // Track page view on mount
+  useEffect(() => {
+    track('page_view', { page: 'employees' })
+  }, [track])
+
   // Reset pagination when search or filter changes
   const prevSearch = useRef(debouncedSearch)
   const prevFilter = useRef(filter)
@@ -43,9 +50,22 @@ export function EmployeesPage() {
     }
   }, [debouncedSearch, filter])
 
+  // Track search (result count only — never log search text, could be PII)
+  useEffect(() => {
+    if (debouncedSearch && !loading) {
+      track('employee_search', { resultCount: totalCount })
+    }
+  }, [debouncedSearch, loading, totalCount, track])
+
   const handleFilterChange = useCallback((newFilter: EmployeeFilter) => {
     setFilter(newFilter)
-  }, [])
+    const activeKeys = Object.keys(newFilter).filter(
+      (k) => (newFilter as Record<string, string[]>)[k]?.length > 0
+    )
+    if (activeKeys.length > 0) {
+      track('employee_filter_applied', { filterTypes: activeKeys })
+    }
+  }, [track])
 
   function handleNextPage() {
     if (pageInfo?.endCursor) {
@@ -83,6 +103,7 @@ export function EmployeesPage() {
 
   function handleViewEmployee(employee: Employee) {
     setSelectedEmployeeId(employee.id)
+    track('employee_detail_opened', { employeeId: employee.id })
   }
 
   const currentStart = totalCount > 0 ? currentPage * pageSize + 1 : 0

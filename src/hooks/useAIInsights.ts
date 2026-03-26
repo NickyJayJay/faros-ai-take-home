@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { getConsentToken, clearConsent } from '@/lib/consent'
 import { filterPII, type PIIFilterResult } from '@/lib/pii-filter'
+import { trackEvent } from '@/lib/telemetry-client'
 import { useConsent } from '@/contexts/ConsentContext'
 import type { AIInsightResponse } from '@/types'
 
@@ -53,6 +54,8 @@ export function useAIInsights(employeeId: string): AIInsightState {
 
     setLoading(true)
     setError(null)
+    trackEvent('ai_insight_requested', { employeeId })
+    const fetchStart = Date.now()
 
     try {
       const res = await fetch(`${API_BASE}/insights/${employeeId}`, {
@@ -64,6 +67,7 @@ export function useAIInsights(employeeId: string): AIInsightState {
 
       if (res.status === 429) {
         const body = await res.json().catch(() => ({}))
+        trackEvent('ai_insight_error', { employeeId, errorType: 'rate_limit' })
         setError({
           type: 'rate_limit',
           retryAfter: body.retryAfter ?? 60,
@@ -73,7 +77,7 @@ export function useAIInsights(employeeId: string): AIInsightState {
       }
 
       if (res.status === 401 || res.status === 403) {
-        // Token invalid or expired — clear and signal re-consent
+        trackEvent('ai_insight_error', { employeeId, errorType: 'consent_expired' })
         clearConsent()
         setError({
           type: 'consent_expired',
@@ -83,6 +87,7 @@ export function useAIInsights(employeeId: string): AIInsightState {
       }
 
       if (res.status === 504) {
+        trackEvent('ai_insight_error', { employeeId, errorType: 'timeout' })
         setError({
           type: 'timeout',
           message: 'Insight generation timed out. Please try again.',
@@ -92,6 +97,7 @@ export function useAIInsights(employeeId: string): AIInsightState {
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}))
+        trackEvent('ai_insight_error', { employeeId, errorType: 'network' })
         setError({
           type: 'network',
           message: body.message ?? `Unexpected error (${res.status})`,
@@ -105,12 +111,28 @@ export function useAIInsights(employeeId: string): AIInsightState {
       const filtered = filterPII(data.summary)
       setPiiResult(filtered)
       setInsight({ ...data, filteredSummary: filtered.text })
+
+      trackEvent('ai_insight_received', {
+        employeeId,
+        confidence: data.confidence,
+        latencyMs: Date.now() - fetchStart,
+        piiRedacted: filtered.piiDetected,
+      })
+
+      // Track PII redaction types separately (never log actual PII values)
+      if (filtered.piiDetected) {
+        trackEvent('ai_pii_redacted', {
+          employeeId,
+          redactedTypes: filtered.redactedTypes,
+        })
+      }
     } catch (err: unknown) {
       clearTimeout(timeoutId)
 
       if (err instanceof DOMException && err.name === 'AbortError') {
         // Could be our client-side timeout or a component unmount
         if (!controller.signal.reason) {
+          trackEvent('ai_insight_error', { employeeId, errorType: 'timeout' })
           setError({
             type: 'timeout',
             message: 'Insight generation timed out. Please try again.',
@@ -120,6 +142,7 @@ export function useAIInsights(employeeId: string): AIInsightState {
         return
       }
 
+      trackEvent('ai_insight_error', { employeeId, errorType: 'network' })
       setError({
         type: 'network',
         message: 'Something went wrong. Please try again.',

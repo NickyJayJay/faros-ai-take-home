@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { RefreshCw, ThumbsUp, ThumbsDown, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ConfidenceIndicator } from './ConfidenceIndicator'
+import { useTelemetry } from '@/hooks/useTelemetry'
 import type { AIInsightResponse } from '@/types'
 
 interface InsightCardProps {
@@ -12,6 +13,15 @@ interface InsightCardProps {
 
 export function InsightCard({ insight, piiRedacted, onRegenerate }: InsightCardProps) {
   const [feedback, setFeedback] = useState<'up' | 'down' | null>(null)
+  const { track } = useTelemetry()
+
+  function handleFeedback(value: 'up' | 'down') {
+    setFeedback(value)
+    track('ai_insight_feedback', {
+      employeeId: insight.employeeId,
+      feedback: value,
+    })
+  }
   const isLowConfidence = insight.confidence < 0.3
 
   return (
@@ -56,7 +66,7 @@ export function InsightCard({ insight, piiRedacted, onRegenerate }: InsightCardP
           <Button
             variant="ghost"
             size="icon-sm"
-            onClick={() => setFeedback('up')}
+            onClick={() => handleFeedback('up')}
             aria-label="Helpful"
             className={feedback === 'up' ? 'text-green-600' : 'text-muted-foreground'}
           >
@@ -65,7 +75,7 @@ export function InsightCard({ insight, piiRedacted, onRegenerate }: InsightCardP
           <Button
             variant="ghost"
             size="icon-sm"
-            onClick={() => setFeedback('down')}
+            onClick={() => handleFeedback('down')}
             aria-label="Not helpful"
             className={feedback === 'down' ? 'text-red-600' : 'text-muted-foreground'}
           >

@@ -3,6 +3,7 @@ import { Settings } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useFeatureFlags } from '@/contexts/FeatureFlagContext'
+import { useTelemetry } from '@/hooks/useTelemetry'
 import { FLAG_DEFINITIONS } from '@/lib/feature-flags'
 
 /**
@@ -12,6 +13,12 @@ import { FLAG_DEFINITIONS } from '@/lib/feature-flags'
 export function DevFlagToggle() {
   const [open, setOpen] = useState(false)
   const { flags, toggleFlag } = useFeatureFlags()
+  const { track } = useTelemetry()
+
+  function handleToggle(key: string) {
+    toggleFlag(key)
+    track('feature_flag_toggled', { flag: key, newValue: !flags[key] })
+  }
 
   return (
     <div className="fixed bottom-4 right-4 z-[100]">
@@ -31,7 +38,7 @@ export function DevFlagToggle() {
               <label key={key} className="flex items-start gap-2 cursor-pointer">
                 <Checkbox
                   checked={flags[key] ?? false}
-                  onCheckedChange={() => toggleFlag(key)}
+                  onCheckedChange={() => handleToggle(key)}
                   className="mt-0.5"
                 />
                 <div>

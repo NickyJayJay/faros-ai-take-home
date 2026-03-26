@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useConsent } from '@/contexts/ConsentContext'
+import { useTelemetry } from '@/hooks/useTelemetry'
 
 export function ConsentPrompt() {
   const { grantConsent } = useConsent()
+  const { track } = useTelemetry()
   const [granting, setGranting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -13,8 +15,10 @@ export function ConsentPrompt() {
     setError(null)
     try {
       await grantConsent()
+      track('ai_consent_granted')
     } catch {
       setError('Failed to enable AI insights. Please try again.')
+      track('ai_consent_denied', { reason: 'error' })
     } finally {
       setGranting(false)
     }
