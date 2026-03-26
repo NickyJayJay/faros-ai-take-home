@@ -43,6 +43,8 @@ export function EmployeesPage() {
   const prevFilter = useRef(filter)
   useEffect(() => {
     if (prevSearch.current !== debouncedSearch || prevFilter.current !== filter) {
+      // Intentional: reset pagination state when inputs change — guarded by condition, no infinite loop risk
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAfterCursor(null)
       cursorStack.current = []
       setCurrentPage(0)
