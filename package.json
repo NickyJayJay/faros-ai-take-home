@@ -10,7 +10,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"*.{ts,js}\""
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"*.{ts,js}\"",
+    "typecheck": "tsc -b --noEmit",
+    "typecheck:watch": "tsc -b --noEmit --watch"
   },
   "dependencies": {
     "@apollo/client": "^4.1.6",
