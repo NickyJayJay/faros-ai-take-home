@@ -1,21 +1,21 @@
-import { useState } from 'react'
-import { TableRow, TableCell } from '@/components/ui/table'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
-import type { Employee } from '@/types'
-import { StatusBadge } from '@/components/common/StatusBadge'
-import { TeamChip } from '@/components/common/TeamChip'
-import { AccountIcon } from '@/components/common/AccountIcon'
-import { User } from 'lucide-react'
+import { useState } from 'react';
+import { TableRow, TableCell } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import type { Employee } from '@/types';
+import { StatusBadge } from '@/components/common/StatusBadge';
+import { TeamChip } from '@/components/common/TeamChip';
+import { AccountIcon } from '@/components/common/AccountIcon';
+import { User } from 'lucide-react';
 
 interface EmployeeRowProps {
-  employee: Employee
-  onView: (employee: Employee) => void
+  employee: Employee;
+  onView: (employee: Employee) => void;
 }
 
 export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
-  const [imgError, setImgError] = useState(false)
-  const showFallback = !employee.photoUrl || imgError
+  const [imgError, setImgError] = useState(false);
+  const showFallback = !employee.photoUrl || imgError;
 
   return (
     <TableRow>
@@ -71,7 +71,11 @@ export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
       <TableCell>
         <div className="flex items-center gap-2">
           {employee.accounts.map((account) => (
-            <AccountIcon key={`${account.type}-${account.uid}`} type={account.type} source={account.source} />
+            <AccountIcon
+              key={`${account.type}-${account.uid}`}
+              type={account.type}
+              source={account.source}
+            />
           ))}
         </div>
       </TableCell>
@@ -83,5 +87,5 @@ export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
         </Button>
       </TableCell>
     </TableRow>
-  )
+  );
 }

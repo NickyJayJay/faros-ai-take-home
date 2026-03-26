@@ -7,34 +7,31 @@
  * - IMPORTANT: Never include PII (search text, names, emails) in event properties
  */
 
-import type { TelemetryEvent } from '@/types'
+import type { TelemetryEvent } from '@/types';
 
-const TELEMETRY_URL = 'http://localhost:4000/api/telemetry'
-const FLUSH_INTERVAL_MS = 5_000
+const TELEMETRY_URL = 'http://localhost:4000/api/telemetry';
+const FLUSH_INTERVAL_MS = 5_000;
 
 // Generate a unique session ID per page load
-const sessionId = crypto.randomUUID()
+const sessionId = crypto.randomUUID();
 
-let eventQueue: TelemetryEvent[] = []
-let flushTimer: ReturnType<typeof setInterval> | null = null
+let eventQueue: TelemetryEvent[] = [];
+let flushTimer: ReturnType<typeof setInterval> | null = null;
 
 /**
  * Track a telemetry event. Events are batched and flushed periodically.
  */
-export function trackEvent(
-  event: string,
-  properties?: Record<string, unknown>
-): void {
+export function trackEvent(event: string, properties?: Record<string, unknown>): void {
   eventQueue.push({
     event,
     properties,
     timestamp: new Date().toISOString(),
     sessionId,
-  })
+  });
 
   // Start the flush timer on first event
   if (!flushTimer) {
-    flushTimer = setInterval(flush, FLUSH_INTERVAL_MS)
+    flushTimer = setInterval(flush, FLUSH_INTERVAL_MS);
   }
 }
 
@@ -42,10 +39,10 @@ export function trackEvent(
  * Flush all queued events to the server.
  */
 async function flush(): Promise<void> {
-  if (eventQueue.length === 0) return
+  if (eventQueue.length === 0) return;
 
-  const batch = eventQueue
-  eventQueue = []
+  const batch = eventQueue;
+  eventQueue = [];
 
   // Send each event individually (server expects single objects)
   const promises = batch.map((evt) =>
@@ -56,9 +53,9 @@ async function flush(): Promise<void> {
     }).catch(() => {
       // Silently drop failed telemetry — never block the user
     })
-  )
+  );
 
-  await Promise.all(promises)
+  await Promise.all(promises);
 }
 
 /**
@@ -71,19 +68,19 @@ function flushOnUnload(): void {
       navigator.sendBeacon(
         TELEMETRY_URL,
         new Blob([JSON.stringify(evt)], { type: 'application/json' })
-      )
+      );
     } catch {
       // Best effort — ignore failures
     }
   }
-  eventQueue = []
+  eventQueue = [];
 }
 
 // Register unload handler
 if (typeof window !== 'undefined') {
   window.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
-      flushOnUnload()
+      flushOnUnload();
     }
-  })
+  });
 }

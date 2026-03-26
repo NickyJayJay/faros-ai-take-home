@@ -1,25 +1,25 @@
-import { useQuery } from '@apollo/client/react'
-import { GET_EMPLOYEES } from '@/graphql/queries'
-import type { GetEmployeesData, GetEmployeesVars, EmployeeFilter } from '@/types'
+import { useQuery } from '@apollo/client/react';
+import { GET_EMPLOYEES } from '@/graphql/queries';
+import type { GetEmployeesData, GetEmployeesVars, EmployeeFilter } from '@/types';
 
-const DEFAULT_PAGE_SIZE = 5
+const DEFAULT_PAGE_SIZE = 5;
 
-export function useEmployees(options: {
-  pageSize?: number
-  after?: string | null
-  search?: string
-  filter?: EmployeeFilter
-} = {}) {
-  const { pageSize = DEFAULT_PAGE_SIZE, after = null, search, filter } = options
+export function useEmployees(
+  options: {
+    pageSize?: number;
+    after?: string | null;
+    search?: string;
+    filter?: EmployeeFilter;
+  } = {}
+) {
+  const { pageSize = DEFAULT_PAGE_SIZE, after = null, search, filter } = options;
 
   const variables: GetEmployeesVars = {
     first: pageSize,
     after,
     ...(search ? { search } : {}),
-    ...(filter && Object.values(filter).some((v) => v && v.length > 0)
-      ? { filter }
-      : {}),
-  }
+    ...(filter && Object.values(filter).some((v) => v && v.length > 0) ? { filter } : {}),
+  };
 
   const { data, loading, error, refetch } = useQuery<GetEmployeesData, GetEmployeesVars>(
     GET_EMPLOYEES,
@@ -27,7 +27,7 @@ export function useEmployees(options: {
       variables,
       notifyOnNetworkStatusChange: true,
     }
-  )
+  );
 
   return {
     employees: data?.employees.edges.map((edge) => edge.node) ?? [],
@@ -36,5 +36,5 @@ export function useEmployees(options: {
     loading,
     error: error ?? null,
     refetch,
-  }
+  };
 }

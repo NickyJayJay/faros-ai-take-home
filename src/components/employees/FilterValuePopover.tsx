@@ -1,16 +1,16 @@
-import { useState, useMemo } from 'react'
-import { Search } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState, useMemo } from 'react';
+import { Search } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 interface FilterValuePopoverProps {
-  triggerContent: React.ReactNode
-  options: { value: string; label: string }[]
-  selectedValues: string[]
-  onApply: (values: string[]) => void
-  searchPlaceholder?: string
+  triggerContent: React.ReactNode;
+  options: { value: string; label: string }[];
+  selectedValues: string[];
+  onApply: (values: string[]) => void;
+  searchPlaceholder?: string;
 }
 
 export function FilterValuePopover({
@@ -20,55 +20,55 @@ export function FilterValuePopover({
   onApply,
   searchPlaceholder = 'Search...',
 }: FilterValuePopoverProps) {
-  const [open, setOpen] = useState(false)
-  const [search, setSearch] = useState('')
-  const [selected, setSelected] = useState<Set<string>>(new Set(selectedValues))
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Set<string>>(new Set(selectedValues));
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
-      setSelected(new Set(selectedValues))
-      setSearch('')
+      setSelected(new Set(selectedValues));
+      setSearch('');
     }
-    setOpen(nextOpen)
+    setOpen(nextOpen);
   }
 
   const filteredOptions = useMemo(() => {
-    if (!search.trim()) return options
-    const term = search.toLowerCase()
-    return options.filter((o) => o.label.toLowerCase().includes(term))
-  }, [options, search])
+    if (!search.trim()) return options;
+    const term = search.toLowerCase();
+    return options.filter((o) => o.label.toLowerCase().includes(term));
+  }, [options, search]);
 
   const allFilteredSelected =
-    filteredOptions.length > 0 && filteredOptions.every((o) => selected.has(o.value))
+    filteredOptions.length > 0 && filteredOptions.every((o) => selected.has(o.value));
 
   function toggleValue(value: string) {
     setSelected((prev) => {
-      const next = new Set(prev)
-      if (next.has(value)) next.delete(value)
-      else next.add(value)
-      return next
-    })
+      const next = new Set(prev);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return next;
+    });
   }
 
   function handleToggleAll() {
     if (allFilteredSelected) {
       setSelected((prev) => {
-        const next = new Set(prev)
-        for (const o of filteredOptions) next.delete(o.value)
-        return next
-      })
+        const next = new Set(prev);
+        for (const o of filteredOptions) next.delete(o.value);
+        return next;
+      });
     } else {
       setSelected((prev) => {
-        const next = new Set(prev)
-        for (const o of filteredOptions) next.add(o.value)
-        return next
-      })
+        const next = new Set(prev);
+        for (const o of filteredOptions) next.add(o.value);
+        return next;
+      });
     }
   }
 
   function handleApply() {
-    onApply([...selected])
-    setOpen(false)
+    onApply([...selected]);
+    setOpen(false);
   }
 
   return (
@@ -98,10 +98,7 @@ export function FilterValuePopover({
         <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
           {filteredOptions.map(({ value, label }) => (
             <label key={value} className="flex items-center gap-2 cursor-pointer">
-              <Checkbox
-                checked={selected.has(value)}
-                onCheckedChange={() => toggleValue(value)}
-              />
+              <Checkbox checked={selected.has(value)} onCheckedChange={() => toggleValue(value)} />
               <span className="text-sm text-foreground">{label}</span>
             </label>
           ))}
@@ -112,10 +109,14 @@ export function FilterValuePopover({
 
         {/* Actions */}
         <div className="mt-3 flex items-center gap-2">
-          <Button size="sm" onClick={handleApply}>Apply</Button>
-          <Button size="sm" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button size="sm" onClick={handleApply}>
+            Apply
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
         </div>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

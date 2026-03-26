@@ -51,15 +51,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <p className="text-sm font-medium text-destructive">
                 {this.props.label ?? 'Something'} failed to load
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {this.state.error?.message}
-              </p>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={this.handleReset}
-                className="mt-2"
-              >
+              <p className="mt-1 text-xs text-muted-foreground">{this.state.error?.message}</p>
+              <Button size="sm" variant="outline" onClick={this.handleReset} className="mt-2">
                 <RefreshCw className="h-3.5 w-3.5 mr-1" />
                 Try Again
               </Button>
@@ -78,9 +71,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             {this.state.error?.message ?? 'An unexpected error occurred.'}
           </p>
         </div>
-        <Button onClick={() => window.location.reload()}>
-          Reload Page
-        </Button>
+        <Button onClick={() => window.location.reload()}>Reload Page</Button>
       </div>
     );
   }

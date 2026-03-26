@@ -1,12 +1,7 @@
-import { gql } from '@apollo/client/core'
+import { gql } from '@apollo/client/core';
 
 export const GET_EMPLOYEES = gql`
-  query GetEmployees(
-    $first: Int
-    $after: String
-    $search: String
-    $filter: EmployeeFilter
-  ) {
+  query GetEmployees($first: Int, $after: String, $search: String, $filter: EmployeeFilter) {
     employees(first: $first, after: $after, search: $search, filter: $filter) {
       edges {
         node {
@@ -40,7 +35,7 @@ export const GET_EMPLOYEES = gql`
       totalCount
     }
   }
-`
+`;
 
 export const GET_EMPLOYEE = gql`
   query GetEmployee($id: ID!) {
@@ -65,7 +60,7 @@ export const GET_EMPLOYEE = gql`
       }
     }
   }
-`
+`;
 
 export const GET_FILTER_OPTIONS = gql`
   query GetFilterOptions {
@@ -82,4 +77,4 @@ export const GET_FILTER_OPTIONS = gql`
       }
     }
   }
-`
+`;

@@ -1,28 +1,24 @@
-import { useState, useEffect } from 'react'
-import { ChevronDown, Sparkles, RefreshCw } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-import { useConsent } from '@/contexts/ConsentContext'
-import { useFeatureFlag } from '@/hooks/useFeatureFlag'
-import { useAIInsights, type InsightError } from '@/hooks/useAIInsights'
-import { ConsentPrompt } from './ConsentPrompt'
-import { InsightCard } from './InsightCard'
+import { useState, useEffect } from 'react';
+import { ChevronDown, Sparkles, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useConsent } from '@/contexts/ConsentContext';
+import { useFeatureFlag } from '@/hooks/useFeatureFlag';
+import { useAIInsights, type InsightError } from '@/hooks/useAIInsights';
+import { ConsentPrompt } from './ConsentPrompt';
+import { InsightCard } from './InsightCard';
 
 interface AIInsightsSectionProps {
-  employeeId: string
+  employeeId: string;
 }
 
 export function AIInsightsSection({ employeeId }: AIInsightsSectionProps) {
-  const aiEnabled = useFeatureFlag('AI_INSIGHTS_ENABLED')
-  const { consented } = useConsent()
-  const { insight, piiResult, loading, error, retry } = useAIInsights(employeeId)
+  const aiEnabled = useFeatureFlag('AI_INSIGHTS_ENABLED');
+  const { consented } = useConsent();
+  const { insight, piiResult, loading, error, retry } = useAIInsights(employeeId);
 
-  if (!aiEnabled) return null
+  if (!aiEnabled) return null;
 
   return (
     <Collapsible defaultOpen>
@@ -50,7 +46,7 @@ export function AIInsightsSection({ employeeId }: AIInsightsSectionProps) {
         </div>
       </CollapsibleContent>
     </Collapsible>
-  )
+  );
 }
 
 function InsightSkeleton() {
@@ -64,19 +60,13 @@ function InsightSkeleton() {
         <Skeleton className="h-5 w-20 rounded-full" />
       </div>
     </div>
-  )
+  );
 }
 
-function InsightError({
-  error,
-  onRetry,
-}: {
-  error: InsightError
-  onRetry: () => void
-}) {
+function InsightError({ error, onRetry }: { error: InsightError; onRetry: () => void }) {
   // Rate limit with countdown
   if (error.type === 'rate_limit') {
-    return <RateLimitMessage retryAfter={error.retryAfter} onRetry={onRetry} />
+    return <RateLimitMessage retryAfter={error.retryAfter} onRetry={onRetry} />;
   }
 
   return (
@@ -89,33 +79,25 @@ function InsightError({
         </Button>
       )}
     </div>
-  )
+  );
 }
 
-function RateLimitMessage({
-  retryAfter,
-  onRetry,
-}: {
-  retryAfter: number
-  onRetry: () => void
-}) {
-  const [seconds, setSeconds] = useState(retryAfter)
+function RateLimitMessage({ retryAfter, onRetry }: { retryAfter: number; onRetry: () => void }) {
+  const [seconds, setSeconds] = useState(retryAfter);
 
   useEffect(() => {
-    if (seconds <= 0) return
+    if (seconds <= 0) return;
     const timer = setInterval(() => {
-      setSeconds((s) => Math.max(0, s - 1))
-    }, 1000)
-    return () => clearInterval(timer)
-  }, [seconds])
+      setSeconds((s) => Math.max(0, s - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [seconds]);
 
   return (
     <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
       <p className="text-sm text-amber-700">
         AI insights are temporarily unavailable.
-        {seconds > 0
-          ? ` Please try again in ${seconds}s.`
-          : ' You can try again now.'}
+        {seconds > 0 ? ` Please try again in ${seconds}s.` : ' You can try again now.'}
       </p>
       {seconds <= 0 && (
         <Button size="sm" variant="outline" onClick={onRetry} className="mt-2">
@@ -124,5 +106,5 @@ function RateLimitMessage({
         </Button>
       )}
     </div>
-  )
+  );
 }

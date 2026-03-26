@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { RefreshCw, ThumbsUp, ThumbsDown, AlertTriangle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { ConfidenceIndicator } from './ConfidenceIndicator'
-import { useTelemetry } from '@/hooks/useTelemetry'
-import type { AIInsightResponse } from '@/types'
+import { useState } from 'react';
+import { RefreshCw, ThumbsUp, ThumbsDown, AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ConfidenceIndicator } from './ConfidenceIndicator';
+import { useTelemetry } from '@/hooks/useTelemetry';
+import type { AIInsightResponse } from '@/types';
 
 interface InsightCardProps {
-  insight: AIInsightResponse & { filteredSummary: string }
-  piiRedacted: boolean
-  onRegenerate: () => void
+  insight: AIInsightResponse & { filteredSummary: string };
+  piiRedacted: boolean;
+  onRegenerate: () => void;
 }
 
 export function InsightCard({ insight, piiRedacted, onRegenerate }: InsightCardProps) {
-  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null)
-  const { track } = useTelemetry()
+  const [feedback, setFeedback] = useState<'up' | 'down' | null>(null);
+  const { track } = useTelemetry();
 
   function handleFeedback(value: 'up' | 'down') {
-    setFeedback(value)
+    setFeedback(value);
     track('ai_insight_feedback', {
       employeeId: insight.employeeId,
       feedback: value,
-    })
+    });
   }
-  const isLowConfidence = insight.confidence < 0.3
+  const isLowConfidence = insight.confidence < 0.3;
 
   return (
     <div className="space-y-3">
@@ -31,17 +31,15 @@ export function InsightCard({ insight, piiRedacted, onRegenerate }: InsightCardP
         <div className="flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 px-3 py-2">
           <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
           <p className="text-xs text-amber-700">
-            Low confidence — this insight may not be reliable. Consider verifying
-            with other data sources.
+            Low confidence — this insight may not be reliable. Consider verifying with other data
+            sources.
           </p>
         </div>
       )}
 
       {/* Summary text */}
       <div className={isLowConfidence ? 'opacity-70' : undefined}>
-        <p className="text-sm text-foreground leading-relaxed">
-          {insight.filteredSummary}
-        </p>
+        <p className="text-sm text-foreground leading-relaxed">{insight.filteredSummary}</p>
       </div>
 
       {/* PII redaction notice */}
@@ -84,16 +82,11 @@ export function InsightCard({ insight, piiRedacted, onRegenerate }: InsightCardP
         </div>
 
         {/* Regenerate */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onRegenerate}
-          className="text-muted-foreground"
-        >
+        <Button variant="ghost" size="sm" onClick={onRegenerate} className="text-muted-foreground">
           <RefreshCw className="h-3.5 w-3.5 mr-1" />
           Regenerate
         </Button>
       </div>
     </div>
-  )
+  );
 }

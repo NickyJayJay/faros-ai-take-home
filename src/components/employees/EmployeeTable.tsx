@@ -1,34 +1,30 @@
-import { ArrowDown } from 'lucide-react'
-import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Checkbox } from '@/components/ui/checkbox'
-import type { Employee } from '@/types'
-import { EmployeeRow } from './EmployeeRow'
+import { ArrowDown } from 'lucide-react';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Checkbox } from '@/components/ui/checkbox';
+import type { Employee } from '@/types';
+import { EmployeeRow } from './EmployeeRow';
 
 interface EmployeeTableProps {
-  employees: Employee[]
-  loading: boolean
-  onViewEmployee: (employee: Employee) => void
+  employees: Employee[];
+  loading: boolean;
+  onViewEmployee: (employee: Employee) => void;
 }
 
 export function EmployeeTable({ employees, loading, onViewEmployee }: EmployeeTableProps) {
   if (loading && employees.length === 0) {
     return (
       <div className="rounded-lg border border-border">
-        <div className="p-12 text-center text-sm text-muted-foreground">
-          Loading employees...
-        </div>
+        <div className="p-12 text-center text-sm text-muted-foreground">Loading employees...</div>
       </div>
-    )
+    );
   }
 
   if (!loading && employees.length === 0) {
     return (
       <div className="rounded-lg border border-border">
-        <div className="p-12 text-center text-sm text-muted-foreground">
-          No employees found.
-        </div>
+        <div className="p-12 text-center text-sm text-muted-foreground">No employees found.</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -54,16 +50,12 @@ export function EmployeeTable({ employees, loading, onViewEmployee }: EmployeeTa
         </TableHeader>
         <TableBody>
           {employees.map((employee) => (
-            <EmployeeRow
-              key={employee.id}
-              employee={employee}
-              onView={onViewEmployee}
-            />
+            <EmployeeRow key={employee.id} employee={employee} onView={onViewEmployee} />
           ))}
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
 
 function SortableHeader({ label }: { label: string }) {
@@ -72,5 +64,5 @@ function SortableHeader({ label }: { label: string }) {
       {label}
       <ArrowDown className="h-3 w-3" />
     </button>
-  )
+  );
 }

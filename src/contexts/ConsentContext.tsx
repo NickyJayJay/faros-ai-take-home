@@ -1,47 +1,47 @@
-import { createContext, useContext, useState, useCallback } from 'react'
-import type { ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
 import {
   fetchConsentToken,
   hasValidConsent,
   clearConsent as clearConsentToken,
-} from '@/lib/consent'
+} from '@/lib/consent';
 
 interface ConsentContextValue {
   /** Whether the user has granted AI consent in this session */
-  consented: boolean
+  consented: boolean;
   /** Grant consent — fetches a token from the server */
-  grantConsent: () => Promise<void>
+  grantConsent: () => Promise<void>;
   /** Revoke consent */
-  revokeConsent: () => void
+  revokeConsent: () => void;
 }
 
-const ConsentContext = createContext<ConsentContextValue | null>(null)
+const ConsentContext = createContext<ConsentContextValue | null>(null);
 
-const USER_ID = 'current-user'
+const USER_ID = 'current-user';
 
 export function ConsentProvider({ children }: { children: ReactNode }) {
-  const [consented, setConsented] = useState(() => hasValidConsent())
+  const [consented, setConsented] = useState(() => hasValidConsent());
 
   const grantConsent = useCallback(async () => {
-    await fetchConsentToken(USER_ID, 'insights')
-    setConsented(true)
-  }, [])
+    await fetchConsentToken(USER_ID, 'insights');
+    setConsented(true);
+  }, []);
 
   const revokeConsent = useCallback(() => {
-    clearConsentToken()
-    setConsented(false)
-  }, [])
+    clearConsentToken();
+    setConsented(false);
+  }, []);
 
   return (
     <ConsentContext.Provider value={{ consented, grantConsent, revokeConsent }}>
       {children}
     </ConsentContext.Provider>
-  )
+  );
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useConsent(): ConsentContextValue {
-  const ctx = useContext(ConsentContext)
-  if (!ctx) throw new Error('useConsent must be used within a ConsentProvider')
-  return ctx
+  const ctx = useContext(ConsentContext);
+  if (!ctx) throw new Error('useConsent must be used within a ConsentProvider');
+  return ctx;
 }

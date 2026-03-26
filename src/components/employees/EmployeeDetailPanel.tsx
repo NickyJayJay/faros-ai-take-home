@@ -1,29 +1,24 @@
-import { useQuery } from '@apollo/client/react'
-import { X, ExternalLink, ChevronDown, Plus } from 'lucide-react'
-import { GET_EMPLOYEE } from '@/graphql/queries'
-import type { GetEmployeeData, GetEmployeeVars } from '@/types'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
-import { AIInsightsSection } from '@/components/ai/AIInsightsSection'
-import { ErrorBoundary } from '@/components/common/ErrorBoundary'
+import { useQuery } from '@apollo/client/react';
+import { X, ExternalLink, ChevronDown, Plus } from 'lucide-react';
+import { GET_EMPLOYEE } from '@/graphql/queries';
+import type { GetEmployeeData, GetEmployeeVars } from '@/types';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { AIInsightsSection } from '@/components/ai/AIInsightsSection';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 
 interface EmployeeDetailPanelProps {
-  employeeId: string
-  onClose: () => void
+  employeeId: string;
+  onClose: () => void;
 }
 
 export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanelProps) {
-  const { data, loading, error } = useQuery<GetEmployeeData, GetEmployeeVars>(
-    GET_EMPLOYEE,
-    { variables: { id: employeeId } }
-  )
+  const { data, loading, error } = useQuery<GetEmployeeData, GetEmployeeVars>(GET_EMPLOYEE, {
+    variables: { id: employeeId },
+  });
 
-  const employee = data?.employee
+  const employee = data?.employee;
 
   return (
     <>
@@ -56,19 +51,10 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
                   {employee.name ?? employee.uid}
                 </h2>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    aria-label="Open external"
-                  >
+                  <Button variant="ghost" size="icon-sm" aria-label="Open external">
                     <ExternalLink className="h-4 w-4" />
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon-sm"
-                    onClick={onClose}
-                    aria-label="Close panel"
-                  >
+                  <Button variant="ghost" size="icon-sm" onClick={onClose} aria-label="Close panel">
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
@@ -104,18 +90,18 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
         )}
       </aside>
     </>
-  )
+  );
 }
 
 function StatusPill({
   trackingStatus,
   trackingCategory,
 }: {
-  trackingStatus: string | null
-  trackingCategory: string | null
+  trackingStatus: string | null;
+  trackingCategory: string | null;
 }) {
-  const isIncluded = trackingStatus === 'Included'
-  const isActive = trackingCategory === 'Active'
+  const isIncluded = trackingStatus === 'Included';
+  const isActive = trackingCategory === 'Active';
 
   return (
     <button
@@ -136,14 +122,10 @@ function StatusPill({
       {isIncluded && trackingCategory ? ` - ${trackingCategory}` : ''}
       <ChevronDown className="h-3.5 w-3.5" />
     </button>
-  )
+  );
 }
 
-function ProfileInfoSection({
-  employee,
-}: {
-  employee: NonNullable<GetEmployeeData['employee']>
-}) {
+function ProfileInfoSection({ employee }: { employee: NonNullable<GetEmployeeData['employee']> }) {
   return (
     <Collapsible defaultOpen>
       <CollapsibleTrigger className="flex w-full items-center gap-1.5 py-2 text-sm font-semibold text-foreground [&[data-open]>svg]:rotate-90">
@@ -164,32 +146,28 @@ function ProfileInfoSection({
         </div>
       </CollapsibleContent>
     </Collapsible>
-  )
+  );
 }
 
 function ReadOnlyField({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-muted-foreground mb-1">
-        {label}
-      </label>
+      <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
       <div className="rounded-md border border-border bg-muted/30 px-3 py-2 text-sm text-foreground">
         {value}
       </div>
     </div>
-  )
+  );
 }
 
 function PlaceholderField({ label }: { label: string }) {
   return (
     <div>
-      <label className="block text-xs font-medium text-muted-foreground mb-1">
-        {label}
-      </label>
+      <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>
       <button className="flex items-center gap-1 text-sm font-medium text-teal-600 hover:text-teal-700">
         <Plus className="h-3.5 w-3.5" />
         Add {label}
       </button>
     </div>
-  )
+  );
 }

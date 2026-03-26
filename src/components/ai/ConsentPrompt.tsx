@@ -1,26 +1,26 @@
-import { useState } from 'react'
-import { Sparkles } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { useConsent } from '@/contexts/ConsentContext'
-import { useTelemetry } from '@/hooks/useTelemetry'
+import { useState } from 'react';
+import { Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useConsent } from '@/contexts/ConsentContext';
+import { useTelemetry } from '@/hooks/useTelemetry';
 
 export function ConsentPrompt() {
-  const { grantConsent } = useConsent()
-  const { track } = useTelemetry()
-  const [granting, setGranting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { grantConsent } = useConsent();
+  const { track } = useTelemetry();
+  const [granting, setGranting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleEnable() {
-    setGranting(true)
-    setError(null)
+    setGranting(true);
+    setError(null);
     try {
-      await grantConsent()
-      track('ai_consent_granted')
+      await grantConsent();
+      track('ai_consent_granted');
     } catch {
-      setError('Failed to enable AI insights. Please try again.')
-      track('ai_consent_denied', { reason: 'error' })
+      setError('Failed to enable AI insights. Please try again.');
+      track('ai_consent_denied', { reason: 'error' });
     } finally {
-      setGranting(false)
+      setGranting(false);
     }
   }
 
@@ -33,20 +33,17 @@ export function ConsentPrompt() {
         <div className="flex-1">
           <h4 className="text-sm font-semibold text-foreground">AI Insights</h4>
           <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-            Get AI-generated insights about this employee's recent activity,
-            collaboration patterns, and contributions. Data is processed
-            securely and insights are generated on-demand.
+            Get AI-generated insights about this employee's recent activity, collaboration patterns,
+            and contributions. Data is processed securely and insights are generated on-demand.
           </p>
           <div className="mt-3 flex items-center gap-2">
             <Button size="sm" onClick={handleEnable} disabled={granting}>
               {granting ? 'Enabling...' : 'Enable AI Insights'}
             </Button>
           </div>
-          {error && (
-            <p className="mt-2 text-xs text-destructive">{error}</p>
-          )}
+          {error && <p className="mt-2 text-xs text-destructive">{error}</p>}
         </div>
       </div>
     </div>
-  )
+  );
 }

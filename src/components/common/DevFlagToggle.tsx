@@ -1,23 +1,23 @@
-import { useState } from 'react'
-import { Settings } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Checkbox } from '@/components/ui/checkbox'
-import { useFeatureFlags } from '@/contexts/FeatureFlagContext'
-import { useTelemetry } from '@/hooks/useTelemetry'
-import { FLAG_DEFINITIONS } from '@/lib/feature-flags'
+import { useState } from 'react';
+import { Settings } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useFeatureFlags } from '@/contexts/FeatureFlagContext';
+import { useTelemetry } from '@/hooks/useTelemetry';
+import { FLAG_DEFINITIONS } from '@/lib/feature-flags';
 
 /**
  * Small floating gear icon for toggling feature flags during development.
  * Only rendered in dev mode.
  */
 export function DevFlagToggle() {
-  const [open, setOpen] = useState(false)
-  const { flags, toggleFlag } = useFeatureFlags()
-  const { track } = useTelemetry()
+  const [open, setOpen] = useState(false);
+  const { flags, toggleFlag } = useFeatureFlags();
+  const { track } = useTelemetry();
 
   function handleToggle(key: string) {
-    toggleFlag(key)
-    track('feature_flag_toggled', { flag: key, newValue: !flags[key] })
+    toggleFlag(key);
+    track('feature_flag_toggled', { flag: key, newValue: !flags[key] });
   }
 
   return (
@@ -51,5 +51,5 @@ export function DevFlagToggle() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

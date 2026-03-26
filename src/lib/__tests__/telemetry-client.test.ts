@@ -43,9 +43,7 @@ describe('telemetry-client', () => {
     await vi.advanceTimersByTimeAsync(5_000);
 
     expect(fetch).toHaveBeenCalled();
-    const body = JSON.parse(
-      vi.mocked(fetch).mock.calls[0][1]!.body as string
-    );
+    const body = JSON.parse(vi.mocked(fetch).mock.calls[0][1]!.body as string);
     expect(body.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(body.sessionId).toMatch(
       /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/

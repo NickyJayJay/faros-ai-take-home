@@ -1,9 +1,9 @@
-import { Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 interface EmployeeSearchProps {
-  value: string
-  onChange: (value: string) => void
+  value: string;
+  onChange: (value: string) => void;
 }
 
 export function EmployeeSearch({ value, onChange }: EmployeeSearchProps) {
@@ -18,5 +18,5 @@ export function EmployeeSearch({ value, onChange }: EmployeeSearchProps) {
         className="pl-9"
       />
     </div>
-  )
+  );
 }

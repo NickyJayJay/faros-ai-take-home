@@ -1,11 +1,11 @@
-import { ApolloProvider } from '@apollo/client/react'
-import { apolloClient } from './graphql/client'
-import { FeatureFlagProvider } from './contexts/FeatureFlagContext'
-import { ConsentProvider } from './contexts/ConsentContext'
-import { ErrorBoundary } from './components/common/ErrorBoundary'
-import { Header } from './components/layout/Header'
-import { EmployeesPage } from './components/employees/EmployeesPage'
-import { DevFlagToggle } from './components/common/DevFlagToggle'
+import { ApolloProvider } from '@apollo/client/react';
+import { apolloClient } from './graphql/client';
+import { FeatureFlagProvider } from './contexts/FeatureFlagContext';
+import { ConsentProvider } from './contexts/ConsentContext';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { Header } from './components/layout/Header';
+import { EmployeesPage } from './components/employees/EmployeesPage';
+import { DevFlagToggle } from './components/common/DevFlagToggle';
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         </FeatureFlagProvider>
       </ApolloProvider>
     </ErrorBoundary>
-  )
+  );
 }
 
-export default App
+export default App;

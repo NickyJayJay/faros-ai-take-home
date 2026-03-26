@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
-import { trackEvent } from '@/lib/telemetry-client'
+import { useCallback } from 'react';
+import { trackEvent } from '@/lib/telemetry-client';
 
 /**
  * Hook providing a stable `track` function for emitting telemetry events.
@@ -8,12 +8,9 @@ import { trackEvent } from '@/lib/telemetry-client'
  * Only pass aggregate/anonymous values like counts, IDs, and categories.
  */
 export function useTelemetry() {
-  const track = useCallback(
-    (event: string, properties?: Record<string, unknown>) => {
-      trackEvent(event, properties)
-    },
-    []
-  )
+  const track = useCallback((event: string, properties?: Record<string, unknown>) => {
+    trackEvent(event, properties);
+  }, []);
 
-  return { track }
+  return { track };
 }
