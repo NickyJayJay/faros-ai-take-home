@@ -128,6 +128,12 @@ describe('filterPII', () => {
       expect(result.piiDetected).toBe(true);
       expect(result.redactedTypes).toContain('dob');
     });
+
+    it('does not flag hyphen dates without DOB context', () => {
+      const input = 'The deadline is 03-15-2025 and review is 04-01-2025.';
+      const result = filterPII(input);
+      expect(result.redactedTypes).not.toContain('dob');
+    });
   });
 
   // Multiple PII types
