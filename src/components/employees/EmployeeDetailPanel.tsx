@@ -9,6 +9,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
+import { AIInsightsSection } from '@/components/ai/AIInsightsSection'
 
 interface EmployeeDetailPanelProps {
   employeeId: string
@@ -85,7 +86,8 @@ export function EmployeeDetailPanel({ employeeId, onClose }: EmployeeDetailPanel
             <div className="flex-1 overflow-y-auto px-6 py-4">
               <ProfileInfoSection employee={employee} />
 
-              {/* AI Insights placeholder — Step 9 */}
+              {/* AI Insights */}
+              <AIInsightsSection employeeId={employeeId} />
             </div>
 
             {/* Footer */}
