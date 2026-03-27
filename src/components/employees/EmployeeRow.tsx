@@ -82,7 +82,7 @@ export function EmployeeRow({ employee, onView }: EmployeeRowProps) {
 
       {/* View */}
       <TableCell>
-        <Button variant="outline" size="sm" onClick={() => onView(employee)}>
+        <Button variant="outline" size="sm" onClick={() => onView(employee)} className="rounded-[4px] h-[32px] w-[52px] px-[6px] py-[12px]">
           View
         </Button>
       </TableCell>

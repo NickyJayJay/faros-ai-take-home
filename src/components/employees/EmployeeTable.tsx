@@ -28,7 +28,7 @@ export function EmployeeTable({ employees, loading, onViewEmployee }: EmployeeTa
   }
 
   return (
-    <div className="rounded-lg border border-border overflow-hidden">
+    <div className="overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent">

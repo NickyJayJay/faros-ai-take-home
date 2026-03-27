@@ -32,7 +32,7 @@ export function Pagination({
   const rangeLabel = totalCount > 0 ? `${currentStart}-${currentEnd}` : '0-0';
 
   return (
-    <div className="flex items-center justify-end gap-3 px-4 py-3">
+    <div className="flex items-center justify-end gap-3 border-t border-border px-4 py-3">
       {/* Page size selector */}
       <Popover open={dropdownOpen} onOpenChange={setDropdownOpen}>
         <PopoverTrigger className="flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-sm text-foreground hover:bg-muted cursor-pointer">

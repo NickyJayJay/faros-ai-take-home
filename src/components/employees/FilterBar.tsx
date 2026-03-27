@@ -35,7 +35,7 @@ export function FilterBar({ filter, onFilterChange }: FilterBarProps) {
     return cats;
   }
 
-  function getOptionsForCategory(category: FilterCategory): { value: string; label: string }[] {
+  function getOptionsForCategory(category: FilterCategory): { value: string; label: string; }[] {
     if (!filterOptions) return [];
     switch (category) {
       case 'teams':
@@ -95,7 +95,7 @@ export function FilterBar({ filter, onFilterChange }: FilterBarProps) {
         <FilterValuePopover
           key={category}
           triggerContent={
-            <button className="flex items-center gap-1.5 rounded-lg bg-teal-50 border border-teal-200 px-2.5 py-1 text-sm font-medium text-teal-700 hover:bg-teal-100 cursor-pointer">
+            <button className="flex items-center gap-1.5 rounded-[4px] bg-teal-50 border border-teal-200 px-[12px] py-[6px] text-sm font-medium text-teal-700 hover:bg-teal-100 cursor-pointer h-[32px]">
               {getChipLabel(category)}
               <span
                 role="button"

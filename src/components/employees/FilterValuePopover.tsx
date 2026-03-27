@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 
 interface FilterValuePopoverProps {
   triggerContent: React.ReactNode;
-  options: { value: string; label: string }[];
+  options: { value: string; label: string; }[];
   selectedValues: string[];
   onApply: (values: string[]) => void;
   searchPlaceholder?: string;
@@ -74,10 +74,10 @@ export function FilterValuePopover({
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger render={triggerContent as React.ReactElement} />
-      <PopoverContent align="start" className="w-64">
+      <PopoverContent align="start" className="w-64 px-[0] py-[0]">
         {/* Search input */}
-        <div className="relative mb-2">
-          <Search className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative mb-2 px-[12px] py-[6px]">
+          <Search className="absolute left-5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -95,7 +95,7 @@ export function FilterValuePopover({
         </button>
 
         {/* Checkbox list */}
-        <div className="flex max-h-48 flex-col gap-2 overflow-y-auto">
+        <div className="flex max-h-48 flex-col gap-2 overflow-y-auto  p-[16px] pb-[0] pt-[6px]">
           {filteredOptions.map(({ value, label }) => (
             <label key={value} className="flex items-center gap-2 cursor-pointer">
               <Checkbox checked={selected.has(value)} onCheckedChange={() => toggleValue(value)} />
@@ -108,11 +108,11 @@ export function FilterValuePopover({
         </div>
 
         {/* Actions */}
-        <div className="mt-3 flex items-center gap-2">
-          <Button size="sm" onClick={handleApply}>
+        <div className="mt-3 flex items-center gap-2 px-[16px] py-[8px] border-t border-solid border-[#DADFF1]">
+          <Button size="sm" onClick={handleApply} className="px-[12px] py-[6px] height-[32px] bg-[#023D67] rounded-[4px]">
             Apply
           </Button>
-          <Button size="sm" variant="outline" onClick={() => setOpen(false)}>
+          <Button size="sm" variant="outline" onClick={() => setOpen(false)} className="px-[12px] py-[6px] height-[32px] rounded-[4px]">
             Cancel
           </Button>
         </div>

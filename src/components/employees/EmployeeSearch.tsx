@@ -15,7 +15,7 @@ export function EmployeeSearch({ value, onChange }: EmployeeSearchProps) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Search employees by name ..."
-        className="pl-9"
+        className="h-10 rounded-md pl-9"
       />
     </div>
   );

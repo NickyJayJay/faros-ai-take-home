@@ -119,7 +119,7 @@ export function EmployeesPage() {
       {/* Breadcrumb + New button row */}
       <div className="flex items-center justify-between mb-6">
         <Breadcrumb />
-        <Button size="sm">
+        <Button size="sm" className="h-10 w-[90px] rounded-md bg-[#023D67] px-4 py-2.5 text-base hover:bg-[#023D67]/90">
           <Plus className="h-4 w-4" />
           New
         </Button>
@@ -142,28 +142,29 @@ export function EmployeesPage() {
         <FilterBar filter={filter} onFilterChange={handleFilterChange} />
       </div>
 
-      {/* Employee table */}
-      <ErrorBoundary label="Employee table" inline>
-        <EmployeeTable
-          employees={employees}
-          loading={loading}
-          onViewEmployee={handleViewEmployee}
-        />
-      </ErrorBoundary>
+      {/* Employee table + pagination panel */}
+      <div className="rounded-lg border border-border overflow-hidden">
+        <ErrorBoundary label="Employee table" inline>
+          <EmployeeTable
+            employees={employees}
+            loading={loading}
+            onViewEmployee={handleViewEmployee}
+          />
+        </ErrorBoundary>
 
-      {/* Pagination */}
-      {totalCount > 0 && (
-        <Pagination
-          pageSize={pageSize}
-          currentStart={currentStart}
-          totalCount={totalCount}
-          hasNextPage={pageInfo?.hasNextPage ?? false}
-          hasPreviousPage={currentPage > 0}
-          onNextPage={handleNextPage}
-          onPreviousPage={handlePreviousPage}
-          onPageSizeChange={handlePageSizeChange}
-        />
-      )}
+        {totalCount > 0 && (
+          <Pagination
+            pageSize={pageSize}
+            currentStart={currentStart}
+            totalCount={totalCount}
+            hasNextPage={pageInfo?.hasNextPage ?? false}
+            hasPreviousPage={currentPage > 0}
+            onNextPage={handleNextPage}
+            onPreviousPage={handlePreviousPage}
+            onPageSizeChange={handlePageSizeChange}
+          />
+        )}
+      </div>
       {/* Employee detail panel */}
       {selectedEmployeeId && (
         <EmployeeDetailPanel
