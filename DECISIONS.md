@@ -28,6 +28,14 @@ Three tiers, each fit for purpose:
 | React Context   | Consent token, feature flags                        | App-wide concerns accessed from many components; update infrequently |
 | useState/useRef | Search input, pagination cursors, selected employee | Component-scoped UI state                                            |
 
+### Code Formatting: Prettier
+
+Prettier is configured with `semi: true` to enforce consistent semicolon usage across the codebase. This was added during a polish pass to eliminate style inconsistencies and reduce noise in future diffs.
+
+### Data Quality: Avatar Fallback
+
+The mock data includes employees with `null` or intentionally broken `photoUrl` values. Rather than letting the browser render broken image icons, `EmployeeRow` detects missing or failed images (`onError`) and renders a Lucide `User` silhouette icon as a fallback. This is a small detail, but broken images signal a lack of polish in a data-driven dashboard.
+
 ## 2. AI Development Environment and Workflow
 
 ### Setup

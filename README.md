@@ -37,6 +37,9 @@ The app runs at `http://localhost:5173`.
 | `npm test` | Run test suite (38 tests) |
 | `npm run test:watch` | Run tests in watch mode |
 | `npm run lint` | Lint with ESLint |
+| `npm run format` | Format with Prettier |
+| `npm run typecheck` | One-shot type check |
+| `npm run typecheck:watch` | Type check in watch mode |
 
 ## Tech Stack
 
